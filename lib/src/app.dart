@@ -1,5 +1,7 @@
 // import flutter
 import "package:flutter/material.dart";
+// import the login screen
+import "screens/login_screen.dart";
 
 // define the app
 class App extends StatelessWidget {
@@ -19,7 +21,7 @@ class App extends StatelessWidget {
           backgroundColor: Colors.green,
         ),
         // body
-        body: Text('Show Login form here!'),
+        body: LoginScreen(),
       ),
     );
   }

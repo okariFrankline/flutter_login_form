@@ -1,5 +1,7 @@
 // import the flutter
 import "package:flutter/material.dart";
+// import validation mixin
+import '../mixins/validation_mixin.dart';
 
 // define the login statefule class
 class LoginScreen extends StatefulWidget {
@@ -8,7 +10,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 // login Screen satate
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
   // create a global key
   // =>  a global key is aunique reference for each of the widgets that are displayed on the screen
   // however, when working with the form widget, the key used references the FormState class and not
@@ -17,6 +19,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   // creating a global key
   final formKey = GlobalKey<FormState>();
+  // holds the email
+  String email = '';
+  // password
+  String password = '';
 
   // build function
   @override
@@ -69,9 +75,18 @@ class _LoginScreenState extends State<LoginScreen> {
         // set the icon
         icon: Icon(Icons.email),
       ),
-
       // optimize the experience for entering an email
       keyboardType: TextInputType.emailAddress,
+      // validator function
+      // the validator functon is used to validate the input entered by the user.
+      // it recieves the input and performs a validation logic and return null if the input
+      // is valid or a string if the input is not valid
+      validator: validateEmail,
+      // get the email entered by the user
+      onSaved: (String value) {
+        // set the email
+        email = value;
+      },
     );
   }
 
@@ -90,6 +105,13 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       // hide what the user has typed
       obscureText: true,
+      // validate the password
+      validator: validatePassword,
+      // function for getting the value entered by the user
+      onSaved: (String value) {
+        // set the email
+        password = value;
+      },
     );
   }
 
@@ -106,11 +128,18 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       // reuqiure on press
       onPressed: () {
-        // reset the fields on the form
+        // validatethe fields on the form
         // can be done by the gloabla key that uses the function current state
         // to give access to the state of the widget for which it references, in this case,
         // the FormState widget.
-        formKey.currentState.reset();
+        final formState = formKey.currentState;
+        // ensure the form is valid
+        if (formState.validate()) {
+          // get both values
+          formState.save();
+          // print out both values
+          print('Time to send $email and $password to some API');
+        }
       },
     );
   }
